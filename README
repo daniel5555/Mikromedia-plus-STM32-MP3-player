@@ -4,6 +4,9 @@ It contains a simple MP3-player with a graphical touch screen interface. It
 alllows to browse files and folders, play audio files and open plain text
 files.
 
+It contais a lot of documentation embedded in code and also several stand-alone
+code examples that aren't used by the firmware.
+
 This code uses the following third-party components:
 -FatFS module from Chan.
 http://elm-chan.org/
