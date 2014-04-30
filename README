@@ -1,4 +1,4 @@
-This code is a firmware for Mikromeda+ for STM32 by Mikroelektronika.
+This code is a firmware for Mikromedia+ for STM32 by Mikroelektronika.
 The page of the board: http://www.mikroe.com/mikromedia/plus/stm32/
 It contains a simple MP3-player with a graphical touch screen interface. It
 alllows to browse files and folders, play audio files and open plain text
