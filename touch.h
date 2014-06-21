@@ -75,7 +75,7 @@ void reset_touch_fifo();
 uint8_t detect_touch();
 void get_touch_data(uint16_t* x, uint16_t* y);
 uint8_t get_fifo_touch_size();
-void test_program();
+void test_touch_values();
 void simple_drawing();
 void test_touch_boxes();
 uint8_t convert_touch_data(uint16_t* x, uint16_t* y);

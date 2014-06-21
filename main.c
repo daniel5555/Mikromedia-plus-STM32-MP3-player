@@ -124,6 +124,10 @@ int main(void)
 
 	paint_areaLCD(0, 0, 479, 271, 0xFFFF);
 
+	//test_touch_values();
+	//simple_drawing();
+	test_touch_boxes();
+
     while(1)
     {
     	if (SDCard_present()) {

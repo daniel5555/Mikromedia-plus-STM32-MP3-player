@@ -606,8 +606,8 @@ uint16_t write_phraseLCD(char *phrase, uint16_t phrase_length, uint16_t x, uint1
 
 /*
  * A function to write a number stored as an array of ASCII characters. It will
- * not write zeroes, that will be stored as first digits in any numbers that
- * are produced by our itoa functions.
+ * not write zero digits, which will be stored as first digits in any numbers
+ * that are produced by our itoa functions.
  */
 uint16_t write_numberLCD(char* number, uint16_t number_length, uint16_t x, uint16_t y,
 					uint16_t number_color, uint16_t background_color) {

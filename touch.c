@@ -472,26 +472,28 @@ uint8_t convert_touch_data(uint16_t* x, uint16_t* y) {
  * when touch is detected. You should use this function and change the code
  * accordingly if other test functions don't work properly.
  */
-void test_program() {
+void test_touch_values() {
 	uint16_t x = 0;
 	uint16_t y = 0;
 	uint16_t x_previous = 1;
 	uint16_t y_previous = 1;
 
+	int posX, posY, posS; //starting positions for writing values
+
+	posS = write_phraseLCD("S:", 2, 0, 200, 0x0000, 0xFFFF);
+	posX = write_phraseLCD("X:", 2, 0, 224, 0x0000, 0xFFFF);
+	posY = write_phraseLCD("Y:", 2, 0, 248, 0x0000, 0xFFFF);
+
+	/*
+	 * Variables to perform cleanup on screen
+	 */
+	int prev_finX, prev_finY, prev_finS;
+	prev_finX = prev_finY = prev_finS = 0;
+
 	int temp;
 
-	temp = write_phraseLCD("X:", 2, 0, 224, 0x0000, 0xFFFF);
-	write_phraseLCD("Y:", 2, 0, 248, 0x0000, 0xFFFF);
-	write_phraseLCD("S:", 2, 0, 200, 0x0000, 0xFFFF);
-
-	char s[6];
-
-	itoa16bits(x, s);
-	write_phraseLCD(s, 6, temp + 1, 224, 0x0000, 0xFFFF);
-	itoa16bits(y, s);
-	write_phraseLCD(s, 6, temp + 1, 248, 0x0000, 0xFFFF);
-
-	uint8_t size = 0;
+	char s[5];
+	uint8_t size;
 
 	while(1)
 	{
@@ -500,18 +502,26 @@ void test_program() {
 	    	if (size > 0) {
 	    		get_touch_data(&x, &y);
 	    		itoa16bits(size, s);
-	    		write_phraseLCD(s, 6, temp + 1, 200, 0x0000, 0xFFFF);
+	    		write_phraseLCD(s, 5, posS + 1, 200, 0x0000, 0xFFFF);
 	    		if ((x != x_previous) || (y != y_previous)) {
 	    			itoa16bits(x, s);
-	    			write_letterLCD('.', 240, 136, 0x0000, 0xFFFF);
-	    			write_phraseLCD(s, 6, temp + 1, 224, 0x0000, 0xFFFF);
+	    			temp = write_letterLCD('.', 240, 136, 0x0000, 0xFFFF);
+	    			if (temp < prev_finS)
+	    				paint_areaLCD(temp + 1, 200, prev_finS, 223, 0xFFFF);
+	    			prev_finS = temp;
+	    			temp = write_phraseLCD(s, 5, posX + 1, 224, 0x0000, 0xFFFF);
+	    			if (temp < prev_finX)
+	    				paint_areaLCD(temp + 1, 224, prev_finX, 247, 0xFFFF);
+	    			prev_finX = temp;
 	    			itoa16bits(y, s);
-	    			write_phraseLCD(s, 6, temp + 1, 248, 0x0000, 0xFFFF);
+	    			temp = write_phraseLCD(s, 5, posY + 1, 248, 0x0000, 0xFFFF);
+	    			if (temp < prev_finY)
+	    				paint_areaLCD(temp + 1, 248, prev_finY, 271, 0xFFFF);
+	    			prev_finY = temp;
 	    			size = 0;
 	    			x_previous = x;
 	    			y_previous = y;
 	    		}
-	    		reset_touch_fifo();
 	    	}
 	    }
 	    else {
@@ -519,19 +529,21 @@ void test_program() {
 	    	x = 0;
 	    	y = 0;
 	    	itoa16bits(size, s);
-	    	write_phraseLCD(s, 6, temp + 1, 200, 0x0000, 0xFFFF);
+	    	prev_finS = write_phraseLCD(s, 5, posS + 1, 200, 0x0000, 0xFFFF);
 	    	itoa16bits(x, s);
 	    	write_letterLCD(' ', 240, 136, 0x0000, 0xFFFF);
-	    	write_phraseLCD(s, 6, temp + 1, 224, 0x0000, 0xFFFF);
+	    	prev_finX = write_phraseLCD(s, 5, posX + 1, 224, 0x0000, 0xFFFF);
 	    	itoa16bits(y, s);
-	    	write_phraseLCD(s, 6, temp + 1, 248, 0x0000, 0xFFFF);
+	    	prev_finY = write_phraseLCD(s, 5, posY + 1, 248, 0x0000, 0xFFFF);
+	    	itoa16bits(prev_finS, s);
 	    }
+	    reset_touch_fifo();
 	}
 }
 
 /*
  * This function allows you to test touch screen coordinates error rate and
- * response time. It simply shows a blanck screen on which you can draw.
+ * response time. It simply shows a blank screen on which you can draw.
  */
 void simple_drawing() {
 	uint16_t x = 0;
@@ -539,43 +551,24 @@ void simple_drawing() {
 	uint16_t x_previous = 10000;
 	uint16_t y_previous = 10000;
 
-	float final_x;
-	float final_y;
-	uint8_t reset = 0;
-
 	reset_touch_fifo();
 	uint8_t size;
 
 	while(1) {
 		if (detect_touch()) {
-			reset = 1;
 			size = get_fifo_touch_size();
 			if (size > 0) {
 				get_touch_data(&x, &y);
-				if ((x >= LEFT_BORDER_X) && (x < RIGHT_BORDER_X)
-						&& (y >= UPPER_BORDER_Y) && (y < BOTTOM_BORDER_Y)) {
-					x /= 10;
-					y /= 10;
-					x -= LEFT_BORDER_X/10;
-					y -= UPPER_BORDER_Y/10;
+				if (convert_touch_data(&x, &y)) {
 					if ((x != x_previous) || (y != y_previous)) {
 						x_previous = x;
 						y_previous = y;
-						final_x = (float)x*FLOAT_PER_PIXEL_X;
-						final_y = (float)y*FLOAT_PER_PIXEL_Y;
-						x = (uint16_t)final_x;
-						y = (uint16_t)final_y;
 						paint_areaLCD(x, y, x + 1, y + 1, 0x0000);
 					}
 				}
 			}
 		}
-		else {
-			if (reset) {
-				reset_touch_fifo();
-				reset = 0;
-			}
-		}
+		reset_touch_fifo();
 	}
 }
 
@@ -589,8 +582,6 @@ void simple_drawing() {
  * function will start the whole process again.
  */
 void test_touch_boxes() {
-	paint_areaLCD(0, 0, 479, 271, 0xFFFF);
-
 	struct Box box1;
 	box1.x_start = 20;
 	box1.y_start = 20;
@@ -633,116 +624,99 @@ void test_touch_boxes() {
 	box7.x_end = 460;
 	box7.y_end = 120;
 
-	paint_areaLCD(box1.x_start, box1.y_start, box1.x_end, box1.y_end, 0xF800);
-	paint_areaLCD(box2.x_start, box2.y_start, box2.x_end, box2.y_end, 0x07E0);
-	paint_areaLCD(box3.x_start, box3.y_start, box3.x_end, box3.y_end, 0x001F);
-	paint_areaLCD(box4.x_start, box4.y_start, box4.x_end, box4.y_end, 0xF81F);
-	paint_areaLCD(box5.x_start, box5.y_start, box5.x_end, box5.y_end, 0xFFE0);
-	paint_areaLCD(box6.x_start, box6.y_start, box6.x_end, box6.y_end, 0x07FF);
-	paint_areaLCD(box7.x_start, box7.y_start, box7.x_end, box7.y_end, 0x0000);
+	while(1) {
+		paint_areaLCD(0, 0, 479, 271, 0xFFFF);
 
-	uint16_t x = 0;
-	uint16_t y = 0;
+		paint_areaLCD(box1.x_start, box1.y_start, box1.x_end, box1.y_end, 0xF800);
+		paint_areaLCD(box2.x_start, box2.y_start, box2.x_end, box2.y_end, 0x07E0);
+		paint_areaLCD(box3.x_start, box3.y_start, box3.x_end, box3.y_end, 0x001F);
+		paint_areaLCD(box4.x_start, box4.y_start, box4.x_end, box4.y_end, 0xF81F);
+		paint_areaLCD(box5.x_start, box5.y_start, box5.x_end, box5.y_end, 0xFFE0);
+		paint_areaLCD(box6.x_start, box6.y_start, box6.x_end, box6.y_end, 0x07FF);
+		paint_areaLCD(box7.x_start, box7.y_start, box7.x_end, box7.y_end, 0x0000);
 
-	float final_x;
-	float final_y;
-	uint8_t reset = 0;
+		uint16_t x = 0;
+		uint16_t y = 0;
 
-	int boxes = 7;
-	uint8_t box1_on_screen = 1;
-	uint8_t box2_on_screen = 1;
-	uint8_t box3_on_screen = 1;
-	uint8_t box4_on_screen = 1;
-	uint8_t box5_on_screen = 1;
-	uint8_t box6_on_screen = 1;
-	uint8_t box7_on_screen = 1;
+		int boxes = 7;
+		uint8_t box1_on_screen = 1;
+		uint8_t box2_on_screen = 1;
+		uint8_t box3_on_screen = 1;
+		uint8_t box4_on_screen = 1;
+		uint8_t box5_on_screen = 1;
+		uint8_t box6_on_screen = 1;
+		uint8_t box7_on_screen = 1;
 
-	uint8_t size;
+		uint8_t size;
 
-	reset_touch_fifo();
+		reset_touch_fifo();
 
-	while (boxes > 0) {
-		if (detect_touch()) {
-			reset = 1;
-			size = get_fifo_touch_size();
-			if (size > 0) {
-				get_touch_data(&x, &y);
-				if ((x >= LEFT_BORDER_X) && (x < RIGHT_BORDER_X)
-						&& (y >= UPPER_BORDER_Y) && (y < BOTTOM_BORDER_Y)) {
-					x /= 10;
-					y /= 10;
-					x -= LEFT_BORDER_X/10;
-					y -= UPPER_BORDER_Y/10;
-
-					final_x = (float)x*FLOAT_PER_PIXEL_X;
-					final_y = (float)y*FLOAT_PER_PIXEL_Y;
-					x = (uint16_t)final_x;
-					y = (uint16_t)final_y;
-					if (box1_on_screen && (x >= box1.x_start) && (x <= box1.x_end)
-							&& (y >= box1.y_start) && (y <= box1.y_end)) {
-						paint_areaLCD(box1.x_start, box1.y_start, box1.x_end,
-								box1.y_end, 0xFFFF);
-						box1_on_screen = 0;
-						--boxes;
-					}
-					else {
-					if (box2_on_screen && (x >= box2.x_start) && (x <= box2.x_end)
-							&& (y >= box2.y_start) && (y <= box2.y_end)) {
-						paint_areaLCD(box2.x_start, box2.y_start, box2.x_end,
-							box2.y_end, 0xFFFF);
-						box2_on_screen = 0;
-						--boxes;
-					}
-					else {
-					if (box3_on_screen && (x >= box3.x_start) && (x <= box3.x_end)
-							&& (y >= box3.y_start) && (y <= box3.y_end)) {
-						paint_areaLCD(box3.x_start, box3.y_start, box3.x_end,
-							box3.y_end, 0xFFFF);
-						box3_on_screen = 0;
-						--boxes;
-					}
-					else {
-					if (box4_on_screen && (x >= box4.x_start) && (x <= box4.x_end)
-							&& (y >= box4.y_start) && (y <= box4.y_end)) {
-						paint_areaLCD(box4.x_start, box4.y_start, box4.x_end,
-						box4.y_end, 0xFFFF);
-						box4_on_screen = 0;
-						--boxes;
-					}
-					else {
-					if (box5_on_screen && (x >= box5.x_start) && (x <= box5.x_end)
-							&& (y >= box5.y_start) && (y <= box5.y_end)) {
-						paint_areaLCD(box5.x_start, box5.y_start, box5.x_end,
-							box5.y_end, 0xFFFF);
-						box5_on_screen = 0;
-						--boxes;
-					}
-					else {
-					if (box6_on_screen && (x >= box6.x_start) && (x <= box6.x_end)
-							&& (y >= box6.y_start) && (y <= box6.y_end)) {
-						paint_areaLCD(box6.x_start, box6.y_start, box6.x_end,
-					    	box6.y_end, 0xFFFF);
-						box6_on_screen = 0;
-						--boxes;
-					}
-					else {
-					if (box7_on_screen && (x >= box7.x_start) && (x <= box7.x_end)
-							&& (y >= box7.y_start) && (y <= box7.y_end)) {
-						paint_areaLCD(box7.x_start, box7.y_start, box7.x_end,
-							box7.y_end, 0xFFFF);
-						box7_on_screen = 0;
-						--boxes;
-					} } } } } }
-					paint_areaLCD(x, y, x + 1, y + 1, 0x0000);
+		while (boxes > 0) {
+			if (detect_touch()) {
+				size = get_fifo_touch_size();
+				if (size > 0) {
+					get_touch_data(&x, &y);
+					if (convert_touch_data(&x, &y)) {
+						if (box1_on_screen && (x >= box1.x_start) && (x <= box1.x_end)
+								&& (y >= box1.y_start) && (y <= box1.y_end)) {
+							paint_areaLCD(box1.x_start, box1.y_start, box1.x_end,
+									box1.y_end, 0xFFFF);
+							box1_on_screen = 0;
+							--boxes;
+						}
+						else {
+						if (box2_on_screen && (x >= box2.x_start) && (x <= box2.x_end)
+								&& (y >= box2.y_start) && (y <= box2.y_end)) {
+							paint_areaLCD(box2.x_start, box2.y_start, box2.x_end,
+									box2.y_end, 0xFFFF);
+							box2_on_screen = 0;
+							--boxes;
+						}
+						else {
+						if (box3_on_screen && (x >= box3.x_start) && (x <= box3.x_end)
+								&& (y >= box3.y_start) && (y <= box3.y_end)) {
+							paint_areaLCD(box3.x_start, box3.y_start, box3.x_end,
+								box3.y_end, 0xFFFF);
+							box3_on_screen = 0;
+							--boxes;
+						}
+						else {
+						if (box4_on_screen && (x >= box4.x_start) && (x <= box4.x_end)
+								&& (y >= box4.y_start) && (y <= box4.y_end)) {
+							paint_areaLCD(box4.x_start, box4.y_start, box4.x_end,
+								box4.y_end, 0xFFFF);
+							box4_on_screen = 0;
+							--boxes;
+						}
+						else {
+						if (box5_on_screen && (x >= box5.x_start) && (x <= box5.x_end)
+								&& (y >= box5.y_start) && (y <= box5.y_end)) {
+							paint_areaLCD(box5.x_start, box5.y_start, box5.x_end,
+								box5.y_end, 0xFFFF);
+							box5_on_screen = 0;
+							--boxes;
+						}
+						else {
+						if (box6_on_screen && (x >= box6.x_start) && (x <= box6.x_end)
+								&& (y >= box6.y_start) && (y <= box6.y_end)) {
+							paint_areaLCD(box6.x_start, box6.y_start, box6.x_end,
+								box6.y_end, 0xFFFF);
+							box6_on_screen = 0;
+							--boxes;
+						}
+						else {
+						if (box7_on_screen && (x >= box7.x_start) && (x <= box7.x_end)
+								&& (y >= box7.y_start) && (y <= box7.y_end)) {
+							paint_areaLCD(box7.x_start, box7.y_start, box7.x_end,
+								box7.y_end, 0xFFFF);
+							box7_on_screen = 0;
+							--boxes;
+						} } } } } } }
+						paint_areaLCD(x, y, x + 1, y + 1, 0x0000);
 					}
 				}
 			}
-		}
-		else {
-			if (reset) {
-				reset_touch_fifo();
-				reset = 0;
-			}
+			reset_touch_fifo();
 		}
 	}
 }
