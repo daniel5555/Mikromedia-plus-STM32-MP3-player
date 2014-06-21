@@ -257,16 +257,16 @@ void GPIOVS1053_Init() {
 }
 
 uint8_t SPI2_Send(uint8_t data) {
-	SPI2->DR = data; // write data to be transmitted to the SPI data register
-	while( !(SPI2->SR & SPI_I2S_FLAG_TXE) ); // wait until transmit complete
-	while( !(SPI2->SR & SPI_I2S_FLAG_RXNE) ); // wait until receive complete
-	while( SPI2->SR & SPI_I2S_FLAG_BSY ); // wait until SPI is not busy anymore
-	return SPI2->DR; // return received data from SPI data register
+	SPI2->DR = data;							//write data to be transmitted to the SPI data register
+	while( !(SPI2->SR & SPI_I2S_FLAG_TXE) );	//wait until transmit complete
+	while( !(SPI2->SR & SPI_I2S_FLAG_RXNE) );	//wait until receive complete
+	while( SPI2->SR & SPI_I2S_FLAG_BSY );		//wait until SPI is not busy anymore
+	return SPI2->DR;							//return received data from SPI data register
 }
 
 void WriteSci(u_int8 addr, u_int16 data) {
 	while (GPIO_ReadInputDataBit(GPIOD, GPIO_Pin_9) == 0);
-	GPIO_WriteBit(GPIOD, GPIO_Pin_11, 0);
+	select_VS1053_SCI();
 	Delay_1inst();
 
 	SPI2_Send(2);
@@ -274,14 +274,14 @@ void WriteSci(u_int8 addr, u_int16 data) {
 	SPI2_Send((uint8_t)((data >> 8) & 0x00FF));
 	SPI2_Send((uint8_t)(data & 0x00FF));
 
-	GPIO_WriteBit(GPIOD, GPIO_Pin_11, 1);
+	deselect_VS1053_SCI();
 }
 
 u_int16 ReadSci(u_int8 addr) {
 	uint16_t data;
 
 	while (GPIO_ReadInputDataBit(GPIOD, GPIO_Pin_9) == 0);
-	GPIO_WriteBit(GPIOD, GPIO_Pin_11, 0);
+	select_VS1053_SCI();
 	Delay_1inst();
 
 	SPI2_Send(3);
@@ -289,7 +289,7 @@ u_int16 ReadSci(u_int8 addr) {
 	data = (uint16_t)SPI2_Send(0xFF) << 8;
 	data |= (uint16_t)SPI2_Send(0xFF);
 
-	GPIO_WriteBit(GPIOD, GPIO_Pin_11, 1);
+	deselect_VS1053_SCI();
 	return data;
 }
 
@@ -299,7 +299,7 @@ int WriteSdi(const u_int8 *data, u_int8 bytes) {
 	uint8_t i;
 
 	while (GPIO_ReadInputDataBit(GPIOD, GPIO_Pin_9) == 0);
-	GPIO_WriteBit(GPIOD, GPIO_Pin_10, 0);
+	select_VS1053_SDI();
 	/*
 	 * Gives a delay of approximately 5,9 nanoseconds while the minimum waiting
 	 * time here is 5 nanoseconds...
@@ -309,7 +309,7 @@ int WriteSdi(const u_int8 *data, u_int8 bytes) {
 	for (i = 0; i < bytes; ++i)
 		SPI2_Send(data[i]);
 
-	GPIO_WriteBit(GPIOD, GPIO_Pin_10, 1);
+	deselect_VS1053_SDI();
 	return 0;
 }
 
@@ -557,12 +557,12 @@ uint8_t VS1053PlayFile(FIL* audio_file) {
 	paint_areaLCD(volume_up_button.x_start, first_black_y_pixel, 479, 247, 0x0000);
 
 	static uint8_t playBuf[FILE_BUFFER_SIZE];
-	uint32_t bytesInBuffer;        // How many bytes in buffer left
-	uint32_t pos=0;                // File position
-	int endFillByte = 0;           // What byte value to send after file
-	int endFillBytes = SDI_END_FILL_BYTES; // How many of those to send
+	uint32_t bytesInBuffer;        				//How many bytes in buffer left
+	uint32_t pos=0;                				//File position
+	int endFillByte = 0;           				//What byte value to send after file
+	int endFillBytes = SDI_END_FILL_BYTES; 		//How many of those to send
 	int playMode = ReadVS10xxMem(PAR_PLAY_MODE);
-	long nextReportPos=0; // File pointer where to next collect/report
+	long nextReportPos=0; 						//File pointer where to next collect/report
 	int i;
 	uint8_t leave_playback = 0;
 	uint8_t petition_to_leave = 0;
@@ -596,7 +596,7 @@ uint8_t VS1053PlayFile(FIL* audio_file) {
 
   	reset_touch_fifo();
 
-    // Main playback loop
+    //Main playback loop
   	while (!leave_playback/*playerState != psStopped*/) {
   		if ((playerState != psPaused) && (playerState != psStopped)) {
   			if ((f_read(audio_file, playBuf, FILE_BUFFER_SIZE, (UINT*)&bytesInBuffer) == FR_OK) && (bytesInBuffer > 0)) {
@@ -608,8 +608,10 @@ uint8_t VS1053PlayFile(FIL* audio_file) {
   					if ((playerState != psPaused) && !(playMode & PAR_PLAY_MODE_PAUSE_ENA)) {
   						int t = min(SDI_MAX_TRANSFER_SIZE, bytesInBuffer);
 
-  						// This is the heart of the algorithm: on the following line
-  						// actual audio data gets sent to VS10xx.
+  						/*
+  						 * This is the heart of the algorithm: on the following line
+  						 * actual audio data gets sent to VS10xx.
+  						 */
   						WriteSdi(bufP, t);
 
   						bufP += t;
@@ -617,7 +619,7 @@ uint8_t VS1053PlayFile(FIL* audio_file) {
   						pos += t;
   					}
 
-  					// If the user has requested cancel, set VS10xx SM_CANCEL bit
+  					//If the user has requested cancel, set VS10xx SM_CANCEL bit
   					if (playerState == psUserRequestedCancel) {
   						unsigned short oldMode;
   						playerState = psCancelSentToVS10xx;
@@ -732,7 +734,7 @@ uint8_t VS1053PlayFile(FIL* audio_file) {
   			else {
   				leave_playback = 1;
   			}
-  		} // if (playerState == psPlayback && pos >= nextReportPos)
+  		} //if (playerState == psPlayback && pos >= nextReportPos)
   		else {
   			if (petition_to_leave)
   				leave_playback = 1;
@@ -909,11 +911,8 @@ uint8_t VS1053PlayFile(FIL* audio_file) {
   				}
   			}
   		}
+
   		reset_touch_fifo();
-  		/*
-  		 * Using more than one reset_touch_fifo() takes too much time... We are
-  		 * real-time now, so we should take a lot of care here.
-  		 */
 
   		if (can_redraw >= 10) {
   			if (redraw_volume_up) {
@@ -1536,14 +1535,14 @@ int VSTestInitHardware(void) {
 	 * reset anc back (set xRESET to 0 for at least a few clock cycles,
 	 * then to 1).
 	 */
-	GPIO_WriteBit(GPIOD, GPIO_Pin_8, 0);
+	perform_hardware_reset_VS1053();
 	Delay_us(1);
 
-	GPIO_WriteBit(GPIOD, GPIO_Pin_11, 1);
-	GPIO_WriteBit(GPIOD, GPIO_Pin_10, 1);
+	deselect_VS1053_SCI();
+	deselect_VS1053_SDI();
 	Delay_us(1);
 
-	GPIO_WriteBit(GPIOD, GPIO_Pin_8, 1);
+	stop_hardware_reset_VS1053();
 	Delay_us(1);
 	return 0;
 }
@@ -1647,28 +1646,28 @@ int VSTestInitSoftware(void) {
 
 	SPI_Init(SPI2, &New_SPI2_Settings);
 
-	// Set up other parameters.
+	//Set up other parameters.
 	WriteVS10xxMem(PAR_CONFIG1, PAR_CONFIG1_AAC_SBR_SELECTIVE_UPSAMPLE);
 
-	// Set volume level at -6 dB of maximum
+	//Set volume level at -6 dB of maximum
 	//WriteSci(SCI_VOL, 0x0c0c);
 
-	// Set volume level at -45 dB of maximum
+	//Set volume level at -45 dB of maximum
 	volume = 0x5A;
 	/*
 	 * Initially, let's set volume to silence in order to prevent user from
 	 * hearing white noise through headphones. The actual volume level will be
-	 * relevant only during listening to actual audio file.
+	 * relevant only during listening to an audio file.
 	 */
 	WriteSci(SCI_VOL, 0xFEFE);
 
 	volume_step = 165;
 	mute = 0;
 
-	// Now it's time to load the proper patch set.
+	//Now it's time to load the proper patch set.
 	LoadPlugin(plugin, sizeof(plugin)/sizeof(plugin[0]));
 
-	// We're ready to go.
+	//We're ready to go.
 	return 0;
 }
 
@@ -1685,7 +1684,7 @@ int VSTestHandleFile(char *fileName, int record) {
 			FIL audio_file;
 			result = f_open(&audio_file, fileName, FA_READ|FA_OPEN_EXISTING);
 			if (result == FR_OK) {
-				//set actual volume if, necessary
+				//set actual volume if necessary
 				if (!mute && !volume_set) {
 					uint16_t volume_register_value = volume << 8;
 					volume_register_value += volume;

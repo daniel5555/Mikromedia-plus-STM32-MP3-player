@@ -13,6 +13,13 @@
 
 #include "vs10xx_uc.h"
 
+#define perform_hardware_reset_VS1053() GPIO_WriteBit(GPIOD, GPIO_Pin_8, 0)
+#define stop_hardware_reset_VS1053() 	GPIO_WriteBit(GPIOD, GPIO_Pin_8, 1)
+#define select_VS1053_SCI()				GPIO_WriteBit(GPIOD, GPIO_Pin_11, 0)
+#define deselect_VS1053_SCI()			GPIO_WriteBit(GPIOD, GPIO_Pin_11, 1)
+#define select_VS1053_SDI()				GPIO_WriteBit(GPIOD, GPIO_Pin_10, 0)
+#define deselect_VS1053_SDI()			GPIO_WriteBit(GPIOD, GPIO_Pin_10, 1)
+
 void GPIOVS1053_Init();
 int VSTestInitHardware(void);
 int VSTestInitSoftware(void);

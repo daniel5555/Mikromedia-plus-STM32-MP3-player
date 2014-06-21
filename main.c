@@ -126,7 +126,7 @@ int main(void)
 
 	//test_touch_values();
 	//simple_drawing();
-	test_touch_boxes();
+	//test_touch_boxes();
 
     while(1)
     {
