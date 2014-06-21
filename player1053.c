@@ -214,10 +214,6 @@ void GPIOVS1053_Init() {
 
 	GPIO_Init(GPIOD, &GPIOVS1053_settings);
 
-	//Select VS1053
-	GPIO_WriteBit(GPIOD, GPIO_Pin_11, 0);
-	GPIO_WriteBit(GPIOD, GPIO_Pin_10, 1);
-
 	GPIOVS1053_settings.GPIO_Pin = GPIO_Pin_13 | GPIO_Pin_14 | GPIO_Pin_15;
 	GPIOVS1053_settings.GPIO_Mode = GPIO_Mode_AF;
 	GPIOVS1053_settings.GPIO_Speed = GPIO_Speed_50MHz;
