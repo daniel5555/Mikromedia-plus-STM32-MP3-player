@@ -30,10 +30,11 @@ http://eliaselectronics.com/
 http://www.mikrocontroller.net/
 
 - StdPeriphLib by ST Electronics
+- SD card driver by ST Electronics
 http://st.com/
 
 - MP3-player application is based on VLSI's example
 http://vlsi.fi/
 
-The code parts mentioned above may have its own licenses. The rest of the code
+The code parts mentioned above may have their own licenses. The rest of the code
 is licensed under BSD 2-clause license.
