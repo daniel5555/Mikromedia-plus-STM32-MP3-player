@@ -68,13 +68,13 @@
   </Target>
   <Components path="./"/>
   <Files>
+    <File name="STM32F4xx_StdFramework/CMSIS/core_cmInstr.h" path="STM32F4xx_StdFramework_V1.0_2013_03_15/CMSIS/core_cmInstr.h" type="1"/>
     <File name="Filesystem layer/ff.c" path="Filesystem layer/ff.c" type="1"/>
     <File name="lcd.h" path="lcd.h" type="1"/>
-    <File name="STM32F4xx_StdFramework/CMSIS/core_cmInstr.h" path="STM32F4xx_StdFramework_V1.0_2013_03_15/CMSIS/core_cmInstr.h" type="1"/>
     <File name="STM32F4xx_StdFramework/StdPeriphLib/STM32F4xx_StdPeriph_Driver/inc/stm32f4xx_i2c.h" path="STM32F4xx_StdFramework_V1.0_2013_03_15/StdPeriphLib/STM32F4xx_StdPeriph_Driver/inc/stm32f4xx_i2c.h" type="1"/>
     <File name="STM32F4xx_StdFramework/StdPeriphLib" path="" type="2"/>
-    <File name="STM32F4xx_StdFramework/StdPeriphLib/STM32F4xx_StdPeriph_Driver/inc/stm32f4xx_flash.h" path="STM32F4xx_StdFramework_V1.0_2013_03_15/StdPeriphLib/STM32F4xx_StdPeriph_Driver/inc/stm32f4xx_flash.h" type="1"/>
     <File name="delay.h" path="delay.h" type="1"/>
+    <File name="STM32F4xx_StdFramework/StdPeriphLib/STM32F4xx_StdPeriph_Driver/inc/stm32f4xx_flash.h" path="STM32F4xx_StdFramework_V1.0_2013_03_15/StdPeriphLib/STM32F4xx_StdPeriph_Driver/inc/stm32f4xx_flash.h" type="1"/>
     <File name="Filesystem layer" path="" type="2"/>
     <File name="STM32F4xx_StdFramework/StdPeriphLib/STM32F4xx_StdPeriph_Driver/src/stm32f4xx_wwdg.c" path="STM32F4xx_StdFramework_V1.0_2013_03_15/StdPeriphLib/STM32F4xx_StdPeriph_Driver/src/stm32f4xx_wwdg.c" type="1"/>
     <File name="registers_listTouch.h" path="registers_listTouch.h" type="1"/>
@@ -84,10 +84,10 @@
     <File name="STM32F4xx_StdFramework/StdPeriphLib/STM32F4xx_StdPeriph_Driver/inc/stm32f4xx_exti.h" path="STM32F4xx_StdFramework_V1.0_2013_03_15/StdPeriphLib/STM32F4xx_StdPeriph_Driver/inc/stm32f4xx_exti.h" type="1"/>
     <File name="STM32F4xx_StdFramework/CMSIS" path="" type="2"/>
     <File name="STM32F4xx_StdFramework/CMSIS/core_cm4.h" path="STM32F4xx_StdFramework_V1.0_2013_03_15/CMSIS/core_cm4.h" type="1"/>
-    <File name="Filesystem layer/ff.h" path="Filesystem layer/ff.h" type="1"/>
     <File name="utils.c" path="utils.c" type="1"/>
-    <File name="STM32F4xx_StdFramework/StdPeriphLib/STM32F4xx_StdPeriph_Driver/src/stm32f4xx_dcmi.c" path="STM32F4xx_StdFramework_V1.0_2013_03_15/StdPeriphLib/STM32F4xx_StdPeriph_Driver/src/stm32f4xx_dcmi.c" type="1"/>
+    <File name="Filesystem layer/ff.h" path="Filesystem layer/ff.h" type="1"/>
     <File name="SD card driver" path="" type="2"/>
+    <File name="STM32F4xx_StdFramework/StdPeriphLib/STM32F4xx_StdPeriph_Driver/src/stm32f4xx_dcmi.c" path="STM32F4xx_StdFramework_V1.0_2013_03_15/StdPeriphLib/STM32F4xx_StdPeriph_Driver/src/stm32f4xx_dcmi.c" type="1"/>
     <File name="apps.c" path="apps.c" type="1"/>
     <File name="STM32F4xx_StdFramework/StdPeriphLib/STM32F4xx_StdPeriph_Driver/src/misc.c" path="STM32F4xx_StdFramework_V1.0_2013_03_15/StdPeriphLib/STM32F4xx_StdPeriph_Driver/src/misc.c" type="1"/>
     <File name="STM32F4xx_StdFramework/StdPeriphLib/STM32F4xx_StdPeriph_Driver/src/stm32f4xx_adc.c" path="STM32F4xx_StdFramework_V1.0_2013_03_15/StdPeriphLib/STM32F4xx_StdPeriph_Driver/src/stm32f4xx_adc.c" type="1"/>
@@ -123,28 +123,28 @@
     <File name="ascii.h" path="ascii.h" type="1"/>
     <File name="STM32F4xx_StdFramework/StdPeriphLib/STM32F4xx_StdPeriph_Driver/src/stm32f4xx_rcc.c" path="STM32F4xx_StdFramework_V1.0_2013_03_15/StdPeriphLib/STM32F4xx_StdPeriph_Driver/src/stm32f4xx_rcc.c" type="1"/>
     <File name="STM32F4xx_StdFramework/StdPeriphLib/STM32F4xx_StdPeriph_Driver/src/stm32f4xx_dbgmcu.c" path="STM32F4xx_StdFramework_V1.0_2013_03_15/StdPeriphLib/STM32F4xx_StdPeriph_Driver/src/stm32f4xx_dbgmcu.c" type="1"/>
-    <File name="main.c" path="main.c" type="1"/>
     <File name="SD card driver/stm324xg_eval_sdio_sd.c" path="SD card driver/stm324xg_eval_sdio_sd.c" type="1"/>
+    <File name="main.c" path="main.c" type="1"/>
     <File name="SD card driver/stm32f4xx_it.c" path="SD card driver/stm32f4xx_it.c" type="1"/>
     <File name="rgb_led.c" path="rgb_led.c" type="1"/>
-    <File name="STM32F4xx_StdFramework/StdPeriphLib/STM32F4xx_StdPeriph_Driver/src/stm32f4xx_iwdg.c" path="STM32F4xx_StdFramework_V1.0_2013_03_15/StdPeriphLib/STM32F4xx_StdPeriph_Driver/src/stm32f4xx_iwdg.c" type="1"/>
     <File name="STM32F4xx_StdFramework/CMSIS/core_cm4_simd.h" path="STM32F4xx_StdFramework_V1.0_2013_03_15/CMSIS/core_cm4_simd.h" type="1"/>
-    <File name="STM32F4xx_StdFramework/StdPeriphLib/STM32F4xx_StdPeriph_Driver/src/stm32f4xx_sdio.c" path="STM32F4xx_StdFramework_V1.0_2013_03_15/StdPeriphLib/STM32F4xx_StdPeriph_Driver/src/stm32f4xx_sdio.c" type="1"/>
+    <File name="STM32F4xx_StdFramework/StdPeriphLib/STM32F4xx_StdPeriph_Driver/src/stm32f4xx_iwdg.c" path="STM32F4xx_StdFramework_V1.0_2013_03_15/StdPeriphLib/STM32F4xx_StdPeriph_Driver/src/stm32f4xx_iwdg.c" type="1"/>
     <File name="SD card driver/stm32f4xx_it.h" path="SD card driver/stm32f4xx_it.h" type="1"/>
+    <File name="STM32F4xx_StdFramework/StdPeriphLib/STM32F4xx_StdPeriph_Driver/src/stm32f4xx_sdio.c" path="STM32F4xx_StdFramework_V1.0_2013_03_15/StdPeriphLib/STM32F4xx_StdPeriph_Driver/src/stm32f4xx_sdio.c" type="1"/>
     <File name="STM32F4xx_StdFramework/StdPeriphLib/STM32F4xx_StdPeriph_Driver/src/stm32f4xx_hash_md5.c" path="STM32F4xx_StdFramework_V1.0_2013_03_15/StdPeriphLib/STM32F4xx_StdPeriph_Driver/src/stm32f4xx_hash_md5.c" type="1"/>
     <File name="SD card driver/stm324xg_eval.c" path="SD card driver/stm324xg_eval.c" type="1"/>
     <File name="STM32F4xx_StdFramework/StdPeriphLib/STM32F4xx_StdPeriph_Driver/src/stm32f4xx_dac.c" path="STM32F4xx_StdFramework_V1.0_2013_03_15/StdPeriphLib/STM32F4xx_StdPeriph_Driver/src/stm32f4xx_dac.c" type="1"/>
     <File name="STM32F4xx_StdFramework/StdPeriphLib/STM32F4xx_StdPeriph_Driver/src/stm32f4xx_spi.c" path="STM32F4xx_StdFramework_V1.0_2013_03_15/StdPeriphLib/STM32F4xx_StdPeriph_Driver/src/stm32f4xx_spi.c" type="1"/>
-    <File name="STM32F4xx_StdFramework/StdPeriphLib/STM32F4xx_StdPeriph_Driver/inc/stm32f4xx_crc.h" path="STM32F4xx_StdFramework_V1.0_2013_03_15/StdPeriphLib/STM32F4xx_StdPeriph_Driver/inc/stm32f4xx_crc.h" type="1"/>
     <File name="STM32F4xx_StdFramework/StdPeriphLib/STM32F4xx_StdPeriph_Driver/src/stm32f4xx_gpio.c" path="STM32F4xx_StdFramework_V1.0_2013_03_15/StdPeriphLib/STM32F4xx_StdPeriph_Driver/src/stm32f4xx_gpio.c" type="1"/>
+    <File name="STM32F4xx_StdFramework/StdPeriphLib/STM32F4xx_StdPeriph_Driver/inc/stm32f4xx_crc.h" path="STM32F4xx_StdFramework_V1.0_2013_03_15/StdPeriphLib/STM32F4xx_StdPeriph_Driver/inc/stm32f4xx_crc.h" type="1"/>
     <File name="STM32F4xx_StdFramework/StdPeriphLib/STM32F4xx_StdPeriph_Driver/inc/stm32f4xx_hash.h" path="STM32F4xx_StdFramework_V1.0_2013_03_15/StdPeriphLib/STM32F4xx_StdPeriph_Driver/inc/stm32f4xx_hash.h" type="1"/>
     <File name="STM32F4xx_StdFramework/StdPeriphLib/STM32F4xx_StdPeriph_Driver/src/stm32f4xx_i2c.c" path="STM32F4xx_StdFramework_V1.0_2013_03_15/StdPeriphLib/STM32F4xx_StdPeriph_Driver/src/stm32f4xx_i2c.c" type="1"/>
     <File name="STM32F4xx_StdFramework/StdPeriphLib/STM32F4xx_StdPeriph_Driver/inc/stm32f4xx_tim.h" path="STM32F4xx_StdFramework_V1.0_2013_03_15/StdPeriphLib/STM32F4xx_StdPeriph_Driver/inc/stm32f4xx_tim.h" type="1"/>
     <File name="STM32F4xx_StdFramework/StdPeriphLib/STM32F4xx_StdPeriph_Driver/src/stm32f4xx_crc.c" path="STM32F4xx_StdFramework_V1.0_2013_03_15/StdPeriphLib/STM32F4xx_StdPeriph_Driver/src/stm32f4xx_crc.c" type="1"/>
     <File name="STM32F4xx_StdFramework/StdPeriphLib/stm32f4xx_StdPeriphLib.h" path="STM32F4xx_StdFramework_V1.0_2013_03_15/StdPeriphLib/stm32f4xx_StdPeriphLib.h" type="1"/>
     <File name="STM32F4xx_StdFramework/StdPeriphLib/STM32F4xx_StdPeriph_Driver/src/stm32f4xx_hash.c" path="STM32F4xx_StdFramework_V1.0_2013_03_15/StdPeriphLib/STM32F4xx_StdPeriph_Driver/src/stm32f4xx_hash.c" type="1"/>
-    <File name="STM32F4xx_StdFramework/StdPeriphLib/STM32F4xx_StdPeriph_Driver/inc/stm32f4xx_dcmi.h" path="STM32F4xx_StdFramework_V1.0_2013_03_15/StdPeriphLib/STM32F4xx_StdPeriph_Driver/inc/stm32f4xx_dcmi.h" type="1"/>
     <File name="SD card driver/stm32_eval_legacy.h" path="SD card driver/stm32_eval_legacy.h" type="1"/>
+    <File name="STM32F4xx_StdFramework/StdPeriphLib/STM32F4xx_StdPeriph_Driver/inc/stm32f4xx_dcmi.h" path="STM32F4xx_StdFramework_V1.0_2013_03_15/StdPeriphLib/STM32F4xx_StdPeriph_Driver/inc/stm32f4xx_dcmi.h" type="1"/>
     <File name="STM32F4xx_StdFramework/StdPeriphLib/STM32F4xx_StdPeriph_Driver/src/stm32f4xx_cryp_aes.c" path="STM32F4xx_StdFramework_V1.0_2013_03_15/StdPeriphLib/STM32F4xx_StdPeriph_Driver/src/stm32f4xx_cryp_aes.c" type="1"/>
     <File name="STM32F4xx_StdFramework/StdPeriphLib/STM32F4xx_StdPeriph_Driver/src/stm32f4xx_can.c" path="STM32F4xx_StdFramework_V1.0_2013_03_15/StdPeriphLib/STM32F4xx_StdPeriph_Driver/src/stm32f4xx_can.c" type="1"/>
     <File name="STM32F4xx_StdFramework/StdPeriphLib/STM32F4xx_StdPeriph_Driver/src" path="" type="2"/>
