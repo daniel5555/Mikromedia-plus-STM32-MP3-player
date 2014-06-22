@@ -1,26 +1,38 @@
 This code is a firmware for Mikromedia+ for STM32 by Mikroelektronika.
 The page of the board: http://www.mikroe.com/mikromedia/plus/stm32/
-It contains a simple MP3-player with a graphical touch screen interface. It
-alllows to browse files and folders, play audio files and open plain text
-files.
+It contains an MP3-player with a graphical touch screen interface. It allows
+browsing files and folders on a microSD-card, play audio files and open plain
+text files.
 
 It contais a lot of documentation embedded in code and also several stand-alone
-code examples that aren't used by the firmware.
+code examples that aren't used by the firmware. It can also be used with other
+boards based on STM32 ARM Cortex-M4 family microcontrollers (some changes, most
+likely, will be required depending on board/project). This project provides
+examples for the following additional controllers:
+
+- SSD1963 Solomon Systech's screen controller
+- STMPE610 Touch screen controller by ST Electronics
+- VS1053 audio codec by VLSI
+
+This project is created with CooCox CoIDE: http://www.coocox.org/CooCox_CoIDE.htm
+It should be compiled with GCC, preferrably with hardware floating point operations
+enabled. Please read this FAQ: http://www.coocox.org/FAQ/FAQ.html for instructions
+on installing CoIDE and compiling projects with GCC.
 
 This code uses the following third-party components:
--FatFS module from Chan.
+- FatFS module from Chan.
 http://elm-chan.org/
 
--Code snippets by Elia from Elia's Electronics blog.
+- Code snippets by Elia from Elia's Electronics blog.
 http://eliaselectronics.com/
 
--Code snippets by peter S. from mikrokontroller.net
+- Code snippets by peter S. from mikrokontroller.net
 http://www.mikrocontroller.net/
 
--StdPeriphLib by ST Electronics
+- StdPeriphLib by ST Electronics
 http://st.com/
 
--MP3-player application is based on VLSI's example
+- MP3-player application is based on VLSI's example
 http://vlsi.fi/
 
 The code parts mentioned above may have its own licenses. The rest of the code
