@@ -33,7 +33,7 @@
  * not the fastest code possible. In fact, it's possible to do the same things
  * it does a lot faster if you directly access the registers instead of using
  * the functions from the framework. However, those functions make the code
- * much more readable, reusable, easier to create and delay they result in is
+ * much more readable, reusable, easy to create and delay they result in is
  * usually insignificant. However, if you need more performance, you would
  * definitely prefer to directly access the registers rather than use the
  * framework.
@@ -48,7 +48,7 @@
  * clock frequencies and then it jumps to the main function of this program.
  *
  * This example is made specifically for Mikromedia+ for STM32 ARM development
- * board, but it should be easy to fit for another board or project.
+ * board, but it should be easy to fit it for another board or project.
  */
 
 #include <stm32f4xx.h>
@@ -67,7 +67,6 @@
 #define NO_SDCARD 0
 #define OPEN_FILE 1
 
-//DIR directory;
 char current_directory_path[20];
 char visited_directories[50][13];
 char target_file[13];
@@ -107,11 +106,10 @@ int main(void)
 	cursors[0] = 0;
 	depth = 0;
 
+	//Initialize audio codec VS1053
 	GPIOVS1053_Init();
-	write_phraseLCD("GPIOVS1053 finished.", 20, 0, 48, 0x0000, 0xFFFF);
 	VSTestInitHardware();
 	while (GPIO_ReadInputDataBit(GPIOD, GPIO_Pin_9) != 1);
-	write_phraseLCD("VS1053 hardware reset finished.", 31, 0, 72, 0x0000, 0xFFFF);
 	int i = VSTestInitSoftware();
 
 	if (!i) {
@@ -124,6 +122,10 @@ int main(void)
 
 	paint_areaLCD(0, 0, 479, 271, 0xFFFF);
 
+	/*
+	 * If you want to try additional testing routines, uncomment one of them
+	 * below. You can only test one at a time.
+	 */
 	//test_touch_values();
 	//simple_drawing();
 	//test_touch_boxes();

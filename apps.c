@@ -30,8 +30,8 @@
 #include <utils.h>
 
 /*
- * This simple function prints a message inside a window, print the name of
- * file related to that message and waits until users pressed the "OK" button.
+ * This simple function prints a message inside a window, prints the name of
+ * file related to that message and waits until users presses the "OK" button.
  * Messages are hardcoded inside the function and all other functions must be
  * aware about the numbers they should return to print a specific message.
  */
@@ -73,22 +73,26 @@ void system_message(uint8_t number) {
 	OK_button.x_end = 345;
 	OK_button.y_end = 182;
 
+	//Paint borders of the window
 	paint_areaLCD(86, 90, 87, 189, 0x0000);
 	paint_areaLCD(88, 90, 385, 91, 0x0000);
 	paint_areaLCD(384, 92, 385, 189, 0x0000);
 	paint_areaLCD(88, 188, 383, 189, 0x0000);
 
+	//Clear the content inside the window
 	paint_areaLCD(88, 92, 383, 187, 0xFFFF);
 
+	//Write the content inside the window
 	write_phraseLCD(message, message_length, 94, 96, 0x0000, 0xFFFF);
 	write_phraseLCD(target_file, 13, 94, 120, 0x0000, 0xFFFF);
 
-	paint_areaLCD(286, 147, 287, 182, 0x0000);
-	paint_areaLCD(288, 147, 345, 148, 0x0000);
-	paint_areaLCD(344, 149, 345, 182, 0x0000);
-	paint_areaLCD(288, 181, 343, 182, 0x0000);
+	//Paint the "OK" button
+	paint_areaLCD(OK_button.x_start, OK_button.y_start, OK_button.x_start + 1, OK_button.y_end, 0x0000);
+	paint_areaLCD(OK_button.x_start + 2, OK_button.y_start, OK_button.x_end, OK_button.y_start + 1, 0x0000);
+	paint_areaLCD(OK_button.x_end - 1, OK_button.y_start + 2, OK_button.x_end, OK_button.y_end, 0x0000);
+	paint_areaLCD(OK_button.x_start + 2, OK_button.y_end - 1, OK_button.x_end - 2, OK_button.y_end, 0x0000);
 
-	paint_areaLCD(288, 149, 343, 180, 0xFFFF);
+	//paint_areaLCD(288, 149, 343, 180, 0xFFFF);
 
 	write_phraseLCD("OK", 2, 298, 155, 0x0000, 0xFFFF);
 
@@ -106,7 +110,7 @@ void system_message(uint8_t number) {
 					if ((x >= OK_button.x_start) && (x <= OK_button.x_end) &&
 							(y >= OK_button.y_start) && (y <= OK_button.y_end)) {
 						done = 1;
-						paint_areaLCD(288, 149, 343, 180, 0x0000);
+						paint_areaLCD(OK_button.x_start + 2, OK_button.y_start + 2, OK_button.x_end - 2, OK_button.y_end - 2, 0x0000);
 						write_phraseLCD("OK", 2, 298, 155, 0xFFFF, 0x0000);
 						Delay_ms(75);
 					}
@@ -114,29 +118,28 @@ void system_message(uint8_t number) {
 			}
 		}
 		reset_touch_fifo();
-		reset_touch_fifo();
-		reset_touch_fifo();
 	}
 
+	//Clear the window
 	paint_areaLCD(86, 90, 385, 189, 0xFFFF);
 }
 
 /*
  * This function is a very simple text viewer, which can only open txt files.
  * Its design is similar to a file manager function. First, it tries to
- * calculate the total number of lines in the txt file. A file reaches its end
- * either when the last pixel of last written character trespassed the line's
- * border or when a newline symbol is reached. The screen can display 10 lines
- * of text with the standard 24p font we use. So, each 10 lines of text are
- * considered a page. When we reach the start of new page we write its location
- * in file in an array called "pages" which should store all pages of file. We
- * fill this array when we scan the file for the first time. So, once the file
- * is scanned, the user can easily navigate by pages and the viewer can easily
- * display them by navigating to a location stored in "pages" and then reading
- * characters byte by byte from it until the screen is completely filled. The
- * most complex part of this function is that the line counting and line
- * displaying should count/display the same number of lines (and characters on
- * each line).
+ * calculate the total number of lines in the txt file. A line reaches its end
+ * either when the last pixel of last written character trespasses the text
+ * area border or when a newline symbol is reached. The screen can display 10
+ * lines of text with the standard 24p font we use. So, each 10 lines of text
+ * are considered a page. When we reach the start of new page we write its
+ * location inside the file in an array called "pages" which should store all
+ * pages of file. We fill this array when we scan the file for the first time.
+ * So, once the file is scanned, the user can easily navigate by pages and the
+ * viewer can easily display them by navigating to a location stored in "pages"
+ * and then reading characters byte by byte from it until the screen is
+ * completely filled. The most complex part of this function is that the line
+ * counting and line displaying should count/display the same number of lines
+ * and characters in each line.
  * The function can only display ASCII characters (visible ones and horizontal
  * tab which is interpreted as a single space). Any other character except
  * newline, which starts a new line immediately, is ignored and not displayed
@@ -349,11 +352,11 @@ uint8_t txt_viewer() {
 					}
 					else {
 						if (arrow_up_button_pressed) {
-							paint_imageLCD((uint16_t*)arrow_up_image, 456, 32);
+							paint_imageLCD((uint16_t*)arrow_up_image, arrow_up.x_start, arrow_up.y_start);
 							arrow_up_button_pressed = 0;
 						}
 						if (arrow_down_button_pressed) {
-							paint_imageLCD((uint16_t*)arrow_down_image, 456, 248);
+							paint_imageLCD((uint16_t*)arrow_down_image, arrow_down.x_start, arrow_down.y_start);
 							arrow_down_button_pressed = 0;
 						}
 					}
@@ -373,7 +376,7 @@ uint8_t txt_viewer() {
 										(y >= exit_app.y_start) &&
 										(y <= exit_app.y_end)) {
 									paint_imageLCD((uint16_t*)folder_up_pressed_image,
-										0, 0);
+										exit_app.x_start, exit_app.y_start);
 									paint_areaLCD(29, 0, 455, 32, 0xFFFF);
 									paint_areaLCD(0, 32, 455, 271, 0xFFFF);
 									return 0;
@@ -389,7 +392,7 @@ uint8_t txt_viewer() {
 											current_row += 10;
 											i = pages[current_page];
 											paint_imageLCD((uint16_t*)arrow_down_pressed_image,
-												456, 248);
+												arrow_down.x_start, arrow_down.y_start);
 											arrow_down_button_pressed = 1;
 											paint_areaLCD(0, 32, 455, 271, 0xFFFF);
 										}
@@ -407,7 +410,7 @@ uint8_t txt_viewer() {
 											current_row -= 10;
 											i = pages[current_page];
 											paint_imageLCD((uint16_t*)arrow_up_pressed_image,
-												456, 32);
+												arrow_up.x_start, arrow_up.y_start);
 											arrow_up_button_pressed = 1;
 											paint_areaLCD(0, 32, 455, 271, 0xFFFF);
 										}
@@ -417,8 +420,6 @@ uint8_t txt_viewer() {
 							}
 						}
 					}
-					reset_touch_fifo();
-					reset_touch_fifo();
 					reset_touch_fifo();
 				}
 			}
@@ -440,12 +441,12 @@ uint8_t txt_viewer() {
  * managing mechanics and interface, so there is no formal separation between
  * internal proceedings and external interface. The algorithm is
  * straightforward: we a have a "current" position that indicates the first
- * file to e displayed on screen. In total, we'll display 10 files or
+ * file to be displayed on screen. In total, we'll display 10 files or
  * directories on screen. The user can go up and down, and each time he/she
- * issues a command,t he file manager will have to read the whole directory,
+ * issues a command, the file manager will have to read the whole directory,
  * because we don't save anywhere contents of directory. This is by far not the
  * best approach, but it is efficient enough given that we want to save as much
- * memory as we can.
+ * RAM as we can.
  */
 uint8_t file_manager() {
 	struct Box arrow_up;
@@ -492,9 +493,9 @@ uint8_t file_manager() {
 	char* s_dir = "dir ";
 
 	write_phraseLCD(&visited_directories[depth][0], 13, 29, 0, 0x0000, 0xFFFF);
-	paint_imageLCD((uint16_t*)folder_up_image, 0, 0);
-	paint_imageLCD((uint16_t*)arrow_up_image, 456, 32);
-	paint_imageLCD((uint16_t*)arrow_down_image, 456, 248);
+	paint_imageLCD((uint16_t*)folder_up_image, folder_up.x_start, folder_up.y_start);
+	paint_imageLCD((uint16_t*)arrow_up_image, arrow_up.x_start, arrow_up.y_start);
+	paint_imageLCD((uint16_t*)arrow_down_image, arrow_down.x_start, arrow_down.y_start);
 
 	reset_touch_fifo();
 
@@ -502,7 +503,7 @@ uint8_t file_manager() {
 	 * This is the general working loop. We don't want our file manager to
 	 * crash if SD card is suddenly extracted. The loop will perform some
 	 * action if a new order was issued by user during the previous cycle of
-	 * this loop. There are few possible action for user: go to parent
+	 * this loop. There are few possible actions for user: go to parent
 	 * directory, go up or down in menu, open a directory and open a file. The
 	 * latter case is the only one which will close the file manager. It will
 	 * write the name of the file to be opened in "target_file" global variable
@@ -618,7 +619,7 @@ uint8_t file_manager() {
 				 * is the only way to get the total number of files using
 				 * Chan's generic FatFS module. We don't have to do this every
 				 * time while we are in the same directory, but for now we'll
-				 * do this because it is fast enough and simple too.
+				 * do it this way because it is fast enough and simple too.
 				 */
 				while (proceed) {
 					result = f_readdir(&directory, &file);
@@ -681,15 +682,15 @@ uint8_t file_manager() {
 		 */
 		else {
 			if (folder_up_button_pressed) {
-				paint_imageLCD((uint16_t*)folder_up_image, 0, 0);
+				paint_imageLCD((uint16_t*)folder_up_image, folder_up.x_start, folder_up.y_start);
 				folder_up_button_pressed = 0;
 			}
 			if (arrow_up_button_pressed) {
-				paint_imageLCD((uint16_t*)arrow_up_image, 456, 32);
+				paint_imageLCD((uint16_t*)arrow_up_image, arrow_up.x_start, arrow_up.y_start);
 				arrow_up_button_pressed = 0;
 			}
 			if (arrow_down_button_pressed) {
-				paint_imageLCD((uint16_t*)arrow_down_image, 456, 248);
+				paint_imageLCD((uint16_t*)arrow_down_image, arrow_down.x_start, arrow_down.y_start);
 				arrow_down_button_pressed = 0;
 			}
 		}
@@ -729,7 +730,7 @@ uint8_t file_manager() {
 						if (cursors[depth] > 0) {
 							--cursors[depth];
 							paint_imageLCD((uint16_t*)arrow_up_pressed_image,
-									456, 32);
+									arrow_up.x_start, arrow_up.y_start);
 							arrow_up_button_pressed = 1;
 							new_order = 1;
 						}
@@ -740,7 +741,7 @@ uint8_t file_manager() {
 						if (cursors[depth] < total_files - 10) {
 							++cursors[depth];
 							paint_imageLCD((uint16_t*)arrow_down_pressed_image,
-									456, 248);
+									arrow_down.x_start, arrow_down.y_start);
 							arrow_down_button_pressed = 1;
 							new_order = 1;
 						}
@@ -828,8 +829,6 @@ uint8_t file_manager() {
 				}
 			}
 		}
-		reset_touch_fifo();
-		reset_touch_fifo();
 		reset_touch_fifo();
 	}
 	return NO_SDCARD;
